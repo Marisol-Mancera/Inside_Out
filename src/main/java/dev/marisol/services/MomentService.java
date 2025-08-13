@@ -4,8 +4,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class MomentService {
-    public List<Moment> moments() {
-        return new ArrayList<>();
-    }
+    private List<Moment> moments = new ArrayList<>(); 
     
+     public List<Moment> getAllMoments() { 
+        return this.moments;
+
+    }
+    public void addMoment(Moment moment) {
+        this.moments.add(moment);
+    }
 }
