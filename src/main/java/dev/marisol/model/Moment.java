@@ -1,4 +1,4 @@
-package model;
+package dev.marisol.model;
 
 import java.time.LocalDate;
 

@@ -1,4 +1,4 @@
-package model;
+package dev.marisol.model;
 
     public enum Emotion {
        HAPPINESS, SADNESS, ANGER, DISGUST, FEAR,
