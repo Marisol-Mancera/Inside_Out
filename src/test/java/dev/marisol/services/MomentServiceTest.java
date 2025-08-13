@@ -44,7 +44,7 @@ public class MomentServiceTest {
     }
 
     @Test
-    public void shouldDeleteAMoment(){
+    public void shouldDeleteAMoment() {
         Moment momentToAdd = new Moment(1, "A moment to delete", "Description", Emotion.SADNESS, LocalDate.now());
         service.addMoment(momentToAdd);
 
@@ -65,10 +65,26 @@ public class MomentServiceTest {
         List<Moment> moments = service.getAllMoments();
         assertEquals(1, moments.size());
 
-        service.deleteMoment(999); 
+        service.deleteMoment(999);
 
         moments = service.getAllMoments();
         assertEquals(1, moments.size());
         assertEquals(momentToAdd, moments.get(0));
+    }
+
+    @Test
+    public void shouldReturnHappyMoments() {
+        Moment happyMoment1 = new Moment(1, "Happy Day 1", "...", Emotion.HAPPINESS, LocalDate.now());
+        Moment sadMoment = new Moment(2, "Sad Day", "...", Emotion.SADNESS, LocalDate.now());
+        Moment happyMoment2 = new Moment(3, "Happy Day 2", "...", Emotion.HAPPINESS, LocalDate.now());
+
+        service.addMoment(happyMoment1);
+        service.addMoment(sadMoment);
+        service.addMoment(happyMoment2);
+
+    List<Moment> filteredMoments = service.filterByEmotion(Emotion.HAPPINESS);
+
+    assertNotNull(filteredMoments);
+    assertEquals(2, filteredMoments.size());
     }
 }

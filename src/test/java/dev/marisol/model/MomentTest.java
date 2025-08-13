@@ -21,7 +21,6 @@ public class MomentTest {
         assertEquals(Emotion.HAPPINESS, myMoment.getEmotion());
         assertEquals(testDate, myMoment.getMomentDate());
         assertNotNull(myMoment.getCreationDate());
-        // assertNotNull(myMoment.getModificationDate());
 
     }
 

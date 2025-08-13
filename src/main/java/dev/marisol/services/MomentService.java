@@ -1,7 +1,9 @@
 package dev.marisol.services;
+import dev.marisol.model.Emotion;
 import dev.marisol.model.Moment;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class MomentService {
     private List<Moment> moments = new ArrayList<>(); 
@@ -17,4 +19,10 @@ public class MomentService {
     public void deleteMoment(int id) {
         moments.removeIf(moment -> moment.getId() == id);
     }
+
+    public List<Moment> filterByEmotion(Emotion emotion){
+        return this.moments.stream()
+        .filter(moment -> moment.getEmotion() == emotion)
+        .collect(Collectors.toList());
+}
 }
