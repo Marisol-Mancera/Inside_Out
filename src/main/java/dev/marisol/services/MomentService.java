@@ -13,4 +13,8 @@ public class MomentService {
     public void addMoment(Moment moment) {
         this.moments.add(moment);
     }
+
+    public void deleteMoment(int id) {
+        moments.removeIf(moment -> moment.getId() == id);
+    }
 }

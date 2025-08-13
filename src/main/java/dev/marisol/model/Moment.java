@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Moment {
 
-    private int id; //¿porque final? R// el valor no puede ser modificado despues de usarse.
+    private final int id; //¿porque final? R// el valor no puede ser modificado despues de usarse.
     private String title;
     private String description;
     private Emotion emotion;

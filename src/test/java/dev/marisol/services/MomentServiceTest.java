@@ -16,16 +16,14 @@ public class MomentServiceTest {
     private MomentService service;
 
     @BeforeEach
-    public void setUp() { 
+    public void setUp() {
         service = new MomentService();
     }
-    
-
 
     @Test
     public void shouldReturnEmptyListWhenNoMoments() {
 
-       List<Moment> moments = service.getAllMoments();
+        List<Moment> moments = service.getAllMoments();
 
         assertNotNull(moments);
         assertTrue(moments.isEmpty());
@@ -33,7 +31,7 @@ public class MomentServiceTest {
     }
 
     @Test
-    public void shouldReturnAListOfMoments(){
+    public void shouldReturnAListOfMoments() {
         Moment momentToAdd = new Moment(1, "A new moment", "Description", Emotion.HAPPINESS, LocalDate.now());
 
         service.addMoment(momentToAdd);
@@ -43,5 +41,34 @@ public class MomentServiceTest {
         assertEquals(1, moments.size());
         assertEquals(momentToAdd, moments.get(0));
 
-}
+    }
+
+    @Test
+    public void shouldDeleteAMoment(){
+        Moment momentToAdd = new Moment(1, "A moment to delete", "Description", Emotion.SADNESS, LocalDate.now());
+        service.addMoment(momentToAdd);
+
+        List<Moment> moments = service.getAllMoments();
+        assertEquals(1, moments.size());
+
+        service.deleteMoment(momentToAdd.getId());
+
+        moments = service.getAllMoments();
+        assertTrue(moments.isEmpty());
+    }
+
+    @Test
+    public void shouldNotDeleteAMomentIfIdDoesNotExist() {
+        Moment momentToAdd = new Moment(1, "A moment to keep", "Description", Emotion.ANGER, LocalDate.now());
+        service.addMoment(momentToAdd);
+
+        List<Moment> moments = service.getAllMoments();
+        assertEquals(1, moments.size());
+
+        service.deleteMoment(999); 
+
+        moments = service.getAllMoments();
+        assertEquals(1, moments.size());
+        assertEquals(momentToAdd, moments.get(0));
+    }
 }
