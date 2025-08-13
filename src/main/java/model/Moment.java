@@ -1,5 +1,4 @@
 package model;
-// clases con id aleatorios mas complejos, ideal si la app llega a hacerse grande
 
 import java.time.LocalDate;
 
