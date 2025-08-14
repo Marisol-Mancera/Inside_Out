@@ -1,4 +1,4 @@
-package dev.marisol.services;
+package dev.marisol.service;
 
 import dev.marisol.model.Emotion;
 
@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import dev.marisol.model.Moment;
-import dev.marisol.services.MomentService;
 
 public class MomentServiceTest {
     private MomentService service;

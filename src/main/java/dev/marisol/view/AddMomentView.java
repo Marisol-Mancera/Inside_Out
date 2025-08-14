@@ -1,0 +1,7 @@
+package dev.marisol.view;
+
+
+
+public class AddMomentView {
+
+}

@@ -1,4 +1,4 @@
-package dev.marisol.services;
+package dev.marisol.service;
 
 import dev.marisol.model.Emotion;
 import dev.marisol.model.Moment;
