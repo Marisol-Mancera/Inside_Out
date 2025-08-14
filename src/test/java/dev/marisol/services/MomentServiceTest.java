@@ -82,9 +82,25 @@ public class MomentServiceTest {
         service.addMoment(sadMoment);
         service.addMoment(happyMoment2);
 
-    List<Moment> filteredMoments = service.filterByEmotion(Emotion.HAPPINESS);
+        List<Moment> filteredMoments = service.filterByEmotion(Emotion.HAPPINESS);
 
-    assertNotNull(filteredMoments);
-    assertEquals(2, filteredMoments.size());
+        assertNotNull(filteredMoments);
+        assertEquals(2, filteredMoments.size());
+    }
+
+    @Test
+    public void shouldReturnMonthMomentWhenfilterByMonth() {
+        Moment happyMoment = new Moment(1, "Happy day", "...", Emotion.HAPPINESS, LocalDate.of(2023, 10, 1));
+        Moment sadMoment = new Moment(2, "Sad day", "...", Emotion.SADNESS, LocalDate.of(2023, 10, 15));
+        Moment disgustMoment = new Moment(3, "Disgusting day", "...", Emotion.DISGUST, LocalDate.of(2023, 11, 20));
+
+        service.addMoment(happyMoment);
+        service.addMoment(sadMoment);
+        service.addMoment(disgustMoment);
+
+        List<Moment> filterdByMonthMoments = service.getMonthMoments(10, 2023);
+
+        assertEquals(2, filterdByMonthMoments.size());
+
     }
 }
