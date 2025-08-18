@@ -6,7 +6,9 @@ import dev.marisol.service.MomentService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainController {
@@ -35,13 +37,8 @@ public class MainController {
                 System.out.println("5. Salir");
                 System.out.print("Seleccione una opción: ");
 
-                // Guard para evitar NoSuchElementException cuando no queda input
-                if (!scanner.hasNextInt()) {
-                    System.out.println("Hasta la próxima!!!");
-                    break;
-                }
                 int option = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el salto pendiente
+                scanner.nextLine(); // limpiar salto
 
                 if (option == 5) {
                     System.out.println("Hasta la próxima!!!");
@@ -81,10 +78,9 @@ public class MainController {
 
                 } else if (option == 2) {
                     System.out.println("Momentos registrados:");
-                    java.util.List<Moment> moments =
-                            (momentService != null)
-                                    ? momentService.getAllMoments()
-                                    : java.util.Collections.emptyList();
+                    List<Moment> moments = (momentService != null)
+                            ? momentService.getAllMoments()
+                            : Collections.emptyList();
 
                     if (moments.isEmpty()) {
                         System.out.println("No hay momentos registrados.");
@@ -98,6 +94,20 @@ public class MainController {
                             );
                         }
                     }
+
+                } else if (option == 3) {
+                    System.out.print("ID del momento a eliminar: ");
+                    int idToDelete = scanner.nextInt();
+                    scanner.nextLine(); // limpiar salto
+
+                    if (momentService != null) {
+                        momentService.deleteMoment(idToDelete);
+                    }
+
+                    System.out.println("Momento eliminado correctamente.");
+
+                } else {
+                    System.out.println("Opción no válida. Por favor, ingrese un número.");
                 }
 
             } catch (InputMismatchException e) {
@@ -107,7 +117,7 @@ public class MainController {
         }
     }
 
-    // helper mínimo para mapear
+    // helper mínimo para mapear emoción 1..10 -> enum
     private Emotion mapEmotionFromCode(int code) {
         switch (code) {
             case 1:  return Emotion.HAPPINESS;
