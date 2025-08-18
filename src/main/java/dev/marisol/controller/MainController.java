@@ -1,17 +1,26 @@
 package dev.marisol.controller;
 
+
 import dev.marisol.model.Emotion;
 import dev.marisol.model.Moment;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import dev.marisol.service.MomentService;
+
 
 public class MainController {
 
     private final Scanner scanner;
+    private MomentService momentService;
+
 
     public MainController(Scanner scanner) {
         this.scanner = scanner;
+    }
+
+     public void setMomentService(MomentService service) {
+        this.momentService = service;
     }
 
     public void start() {
@@ -52,7 +61,7 @@ public class MainController {
                 }
             } catch (InputMismatchException e) { // <-- El catch debe ir aquí, después del try
                 System.out.println("Opción no válida. Por favor, ingrese un número.");
-                scanner.nextLine(); // Limpiar el buffer del scanner
+                scanner.nextLine(); 
             }
         }
     }

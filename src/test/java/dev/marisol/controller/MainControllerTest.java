@@ -9,6 +9,8 @@ import java.util.Scanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -57,11 +59,11 @@ public class MainControllerTest {
     public void shouldCreateAMomentWhenOptionOneIsChosen() {
 
         String simulatedInput = "1\n" +
-                        "Un día en el parque de atracciones\n" + 
-                        "Moment description\n" + 
-                        "1\n" + 
-                        "01/05/2024\n" + 
-                        "5\n";
+                "Un día en el parque de atracciones\n" +
+                "Moment description\n" +
+                "1\n" +
+                "01/05/2024\n" +
+                "5\n";
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
         mainController = new MainController(new Scanner(System.in));
@@ -72,6 +74,44 @@ public class MainControllerTest {
 
         assertTrue(output.contains("1. Añadir momento"));
         assertTrue(output.contains("Descripción del momento:"));
+    }
+
+    @Test
+    void shouldAddAndSaveMomentWhenOptionOneIsChosen() {
+        String simulatedIput = "1\n" +
+                "Un día en el parque de atracciones\n" +
+                "Moment description\n" +
+                "1\n" +
+                "01/05/2024\n" +
+                "5\n";
+
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        SpyMomentService spy = new SpyMomentService();
+        MainController controller = new mainController(new Scanner(System.in));
+
+        controller.start();
+
+         assertEquals(1, spy.addCalls);
+        String oputput = outCOntent.toString();
+        assertTrue(output.contains("Momento añadido correctamente."));
+
+    }
+
+    static class SpyMomentService extends dev.marisol.service.MomentService {
+        int addCalls = 0;
+
+        dev.marisol.model.Moment lastSaved;
+
+        SpyMomentService() {
+            super();
+        }
+
+        @Override
+        public void addMoment(dev.marisol.model.Moment moment) {
+            addCalls++;
+            lastSaved = moment;
+        }
     }
 
 }
