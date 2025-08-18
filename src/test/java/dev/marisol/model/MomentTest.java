@@ -24,7 +24,7 @@ public class MomentTest {
     }
 
     @Test
-public void testModificationDate_initializeCorrectly() {
+    public void testModificationDate_initializeCorrectly() {
     LocalDate eventDate = LocalDate.of(2025, 8, 12); // Una fecha cualquiera para el evento
     Moment myMoment = new Moment(1, "Título", "Descripción", Emotion.HAPPINESS, eventDate);
     LocalDate newModificationDate = LocalDate.now(); // La nueva fecha de modificación

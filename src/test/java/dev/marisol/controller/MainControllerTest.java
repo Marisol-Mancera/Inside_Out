@@ -1,5 +1,6 @@
 package dev.marisol.controller;
 
+import dev.marisol.controller.MainController;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -9,10 +10,7 @@ import java.util.Scanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MainControllerTest {
 
@@ -78,8 +76,8 @@ public class MainControllerTest {
 
     @Test
     void shouldAddAndSaveMomentWhenOptionOneIsChosen() {
-        String simulatedIput = "1\n" +
-                "Un día en el parque de atracciones\n" +
+        String simulatedInput = "1\n" +
+                "Un día en el museo de los horrores\n" +
                 "Moment description\n" +
                 "1\n" +
                 "01/05/2024\n" +
@@ -88,19 +86,21 @@ public class MainControllerTest {
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
         SpyMomentService spy = new SpyMomentService();
-        MainController controller = new mainController(new Scanner(System.in));
 
+        MainController controller = new MainController(new Scanner(System.in));
+        controller.setMomentService(spy);
+
+        // Act
         controller.start();
 
-         assertEquals(1, spy.addCalls);
-        String oputput = outCOntent.toString();
+        // Assert
+        assertEquals(1, spy.addCalls);
+        String output = outContent.toString();
         assertTrue(output.contains("Momento añadido correctamente."));
-
     }
 
     static class SpyMomentService extends dev.marisol.service.MomentService {
         int addCalls = 0;
-
         dev.marisol.model.Moment lastSaved;
 
         SpyMomentService() {
@@ -112,6 +112,37 @@ public class MainControllerTest {
             addCalls++;
             lastSaved = moment;
         }
+    }
+
+    @Test
+    void shouldListAllMomentsWhenOptionTwoIsChosen() {
+        // pre-cargamos el servicio real con dos momentos
+        dev.marisol.service.MomentService service = new dev.marisol.service.MomentService();
+        service.addMoment(new dev.marisol.model.Moment(
+                10,
+                "un viaje inesperado",
+                "un viaje que surgio de la nada",
+                dev.marisol.model.Emotion.HAPPINESS,
+                java.time.LocalDate.of(2024, 5, 1)));
+        service.addMoment(new dev.marisol.model.Moment(
+                11,
+                "se murio mi canario",
+                "pues si, la ha palmado",
+                dev.marisol.model.Emotion.SADNESS,
+                java.time.LocalDate.of(2024, 6, 1)));
+
+        String simulatedInput = "2\n5\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        MainController controller = new MainController(new Scanner(System.in));
+        controller.setMomentService(service);
+
+        controller.start();
+
+        String output = outContent.toString();
+        assertTrue(output.contains("Momentos registrados:"));
+        assertTrue(output.contains("un viaje inesperado"));
+        assertTrue(output.contains("se murio mi canario"));
     }
 
 }
