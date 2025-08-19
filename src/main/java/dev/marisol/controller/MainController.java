@@ -38,7 +38,7 @@ public class MainController {
                 System.out.print("Seleccione una opción: ");
 
                 int option = scanner.nextInt();
-                scanner.nextLine(); // limpiar salto
+                scanner.nextLine();
 
                 if (option == 5) {
                     System.out.println("Hasta la próxima!!!");
@@ -63,7 +63,7 @@ public class MainController {
                     Emotion emotion = mapEmotionFromCode(momentEmotion);
 
                     Moment newMoment = new Moment(
-                            1, // id dummy temporal
+                            1, // 
                             momentTitle,
                             momentDescription,
                             emotion,
