@@ -6,11 +6,20 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+import java.util.List;
+import java.util.Arrays;
+import java.time.LocalDate;
+import dev.marisol.model.Moment;
+import dev.marisol.service.MomentService;
+import dev.marisol.model.Emotion;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public class MainControllerTest {
 
@@ -89,21 +98,19 @@ public class MainControllerTest {
 
     @Test
     void shouldListAllMomentsWhenOptionTwoIsChosen() {
-        dev.marisol.service.MomentService service = new dev.marisol.service.MomentService();
-        service.addMoment(new dev.marisol.model.Moment(
+        MomentService service = new MomentService();
+        service.addMoment(new Moment(
                 10,
                 "un viaje inesperado",
                 "un viaje que surgio de la nada",
-                dev.marisol.model.Emotion.HAPPINESS,
-                java.time.LocalDate.of(2024, 5, 1)
-        ));
-        service.addMoment(new dev.marisol.model.Moment(
+                Emotion.HAPPINESS,
+                java.time.LocalDate.of(2024, 5, 1)));
+        service.addMoment(new Moment(
                 11,
                 "se murio mi canario",
                 "pues si, la ha palmado",
-                dev.marisol.model.Emotion.SADNESS,
-                java.time.LocalDate.of(2024, 6, 1)
-        ));
+                Emotion.SADNESS,
+                java.time.LocalDate.of(2024, 6, 1)));
 
         String simulatedInput = "2\n5\n";
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
@@ -121,17 +128,15 @@ public class MainControllerTest {
 
     @Test
     void shouldDeleteMomentWhenOptionThreeIsChosen() {
-        dev.marisol.service.MomentService service = new dev.marisol.service.MomentService();
-        service.addMoment(new dev.marisol.model.Moment(
+        MomentService service = new MomentService();
+        service.addMoment(new Moment(
                 10, "título a borrar", "desc",
-                dev.marisol.model.Emotion.HAPPINESS,
-                java.time.LocalDate.of(2024, 5, 1)
-        ));
-        service.addMoment(new dev.marisol.model.Moment(
+                Emotion.HAPPINESS,
+                LocalDate.of(2024, 5, 1)));
+        service.addMoment(new Moment(
                 11, "título que queda", "desc",
-                dev.marisol.model.Emotion.SADNESS,
-                java.time.LocalDate.of(2024, 6, 1)
-        ));
+                Emotion.SADNESS,
+                LocalDate.of(2024, 6, 1)));
 
         String simulatedInput = "3\n10\n5\n";
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
@@ -167,14 +172,14 @@ public class MainControllerTest {
         String simulatedInput = "1\n" +
                 "título nostalgia\n" +
                 "desc\n" +
-                "10\n" +                // NOSTALGIA
+                "10\n" + // NOSTALGIA
                 "01/07/2024\n" +
-                "2\n" +                 // listar
+                "2\n" + // listar
                 "5\n";
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
         MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentService(new dev.marisol.service.MomentService());
+        controller.setMomentService(new MomentService());
 
         controller.start();
 
@@ -188,7 +193,7 @@ public class MainControllerTest {
         String simulatedInput = "1\n" +
                 "titulo\n" +
                 "desc\n" +
-                "11\n" +                // fuera de rango
+                "11\n" + // fuera de rango
                 "01/07/2024\n" +
                 "5\n";
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
@@ -199,18 +204,39 @@ public class MainControllerTest {
     }
 
     // ==== Spy para observar llamadas a addMoment ====
-    static class SpyMomentService extends dev.marisol.service.MomentService {
+    static class SpyMomentService extends MomentService {
         int addCalls = 0;
-        dev.marisol.model.Moment lastSaved;
+        Moment lastSaved;
 
         SpyMomentService() {
             super(); // tu MomentService tiene ctor sin args
         }
 
         @Override
-        public void addMoment(dev.marisol.model.Moment moment) {
+        public void addMoment(Moment moment) {
             addCalls++;
             lastSaved = moment;
         }
+    }
+
+    @Test
+    void shouldShowFilteredMomentsWhenOptionFourIsChosen() {
+        String simulatedInput = "4\n5\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        MomentController mockMomentController = Mockito.mock(MomentController.class);
+        List<Moment> filtered = List.of(
+                new Moment(21, "Día feliz", "Me compraron un canario",
+                        Emotion.HAPPINESS, LocalDate.of(2024, 2, 1)));
+        Mockito.when(mockMomentController.filterMoments()).thenReturn(filtered);
+
+        MainController controller = new MainController(new Scanner(System.in));
+        controller.setMomentController(mockMomentController);
+
+        controller.start();
+
+        String output = outContent.toString();
+        assertTrue(output.contains("Filtrar los momentos"));
+        assertTrue(output.contains("Día feliz"));
     }
 }

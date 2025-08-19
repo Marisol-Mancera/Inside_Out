@@ -15,6 +15,7 @@ public class MainController {
 
     private final Scanner scanner;
     private MomentService momentService;
+    private MomentController momentController;
 
     public MainController(Scanner scanner) {
         this.scanner = scanner;
@@ -22,6 +23,10 @@ public class MainController {
 
     public void setMomentService(MomentService service) {
         this.momentService = service;
+    }
+
+    public void setMomentController(MomentController momentController) {
+        this.momentController = momentController;
     }
 
     public void start() {
@@ -53,7 +58,7 @@ public class MainController {
 
                     System.out.print("Emoción del momento (1-10): ");
                     int momentEmotion = scanner.nextInt();
-                    scanner.nextLine(); // limpiar salto
+                    scanner.nextLine(); 
 
                     System.out.print("Fecha del momento (dd/MM/yyyy): ");
                     String momentDate = scanner.nextLine();
@@ -98,7 +103,7 @@ public class MainController {
                 } else if (option == 3) {
                     System.out.print("ID del momento a eliminar: ");
                     int idToDelete = scanner.nextInt();
-                    scanner.nextLine(); // limpiar salto
+                    scanner.nextLine();
 
                     if (momentService != null) {
                         momentService.deleteMoment(idToDelete);
@@ -106,13 +111,26 @@ public class MainController {
 
                     System.out.println("Momento eliminado correctamente.");
 
+                } else if (option == 4){
+                    System.out.println("Filtrar los momentos");
+                    List<Moment> moments = momentController.filterMoments(); Collections.emptyList();
+                    if (moments.isEmpty()){
+                        System.out.println("No hay momentos registrados.");
+                    } else {
+                        for (Moment m : moments) {
+                            System.out.println("Id: " + m.getId()
+                            + " | Título " + m.getTitle()
+                            + " | Emoción " + m.getEmotion()
+                            + " | Fecha " + m.getMomentDate());
+                        }
+                    } 
                 } else {
                     System.out.println("Opción no válida. Por favor, ingrese un número.");
                 }
 
             } catch (InputMismatchException e) {
                 System.out.println("Opción no válida. Por favor, ingrese un número.");
-                scanner.nextLine(); // limpiar token inválido y continuar
+                scanner.nextLine(); 
             }
         }
     }
@@ -120,17 +138,28 @@ public class MainController {
     // helper mínimo para mapear emoción 1..10 -> enum
     private Emotion mapEmotionFromCode(int code) {
         switch (code) {
-            case 1:  return Emotion.HAPPINESS;
-            case 2:  return Emotion.SADNESS;
-            case 3:  return Emotion.ANGER;
-            case 4:  return Emotion.DISGUST;
-            case 5:  return Emotion.FEAR;
-            case 6:  return Emotion.ANXIETY;
-            case 7:  return Emotion.ENVY;
-            case 8:  return Emotion.SHAME;
-            case 9:  return Emotion.BOREDOM;
-            case 10: return Emotion.NOSTALGIA;
-            default: throw new IllegalArgumentException("Emoción fuera de rango (1-10)");
+            case 1:
+                return Emotion.HAPPINESS;
+            case 2:
+                return Emotion.SADNESS;
+            case 3:
+                return Emotion.ANGER;
+            case 4:
+                return Emotion.DISGUST;
+            case 5:
+                return Emotion.FEAR;
+            case 6:
+                return Emotion.ANXIETY;
+            case 7:
+                return Emotion.ENVY;
+            case 8:
+                return Emotion.SHAME;
+            case 9:
+                return Emotion.BOREDOM;
+            case 10:
+                return Emotion.NOSTALGIA;
+            default:
+                throw new IllegalArgumentException("Emoción fuera de rango (1-10)");
         }
     }
 }
