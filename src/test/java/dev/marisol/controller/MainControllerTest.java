@@ -184,7 +184,7 @@ public class MainControllerTest {
     }
 
     @Test
-    void shouldThrowWhenEmotionCodeOutOfRange() {
+    void shouldFailWhenEmotionCodeOutOfRange() {
         String simulatedInput = "1\n" +
                 "titulo\n" +
                 "desc\n" +
