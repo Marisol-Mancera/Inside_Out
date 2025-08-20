@@ -11,8 +11,8 @@ public class AddMomentView {
         this.scanner = scanner;
     }
 
-    public String askTitle() { return ""; }          // dummy
-    public String askDescription() { return ""; }    // dummy
-    public Emotion askEmotion() { return Emotion.HAPPINESS; } // dummy
-    public LocalDate askDate() { return LocalDate.now(); }    // dummy
+    public String askTitle() { return ""; }          
+    public String askDescription() { return ""; }    
+    public Emotion askEmotion() { return Emotion.HAPPINESS; } 
+    public LocalDate askDate() { return LocalDate.now(); }  
 }
