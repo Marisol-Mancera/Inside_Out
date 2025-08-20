@@ -47,11 +47,19 @@ public class AddMomentViewTest {
         assertEquals(LocalDate.of(2024, 5, 1), date);
     }
 
-     @Test
+    @Test
     void askEmotion_shouldReturnHappinessWhenOption1() {
         AddMomentView view = createViewWithInput("1\n");
         Emotion result = view.askEmotion();
         assertEquals(Emotion.HAPPINESS, result);
     }
 
+     @Test
+    void askEmotion_shouldRetryOnInvalidAndReturnSadnessWhen2() {
+        AddMomentView view = createViewWithInput("x\n11\n2\n");
+        Emotion result = view.askEmotion();
+        assertEquals(Emotion.SADNESS, result);
+    }
+
+    
 }
