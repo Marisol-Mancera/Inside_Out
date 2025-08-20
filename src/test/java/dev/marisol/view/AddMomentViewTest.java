@@ -26,4 +26,11 @@ public class AddMomentViewTest {
         assertEquals("Un día en la playa", title);
 
     }
+
+    @Test
+    void askDescription_shouldReturnTypedDescription() {
+        AddMomentView view = createViewWithInput("Descripción del momento\n");
+        String desc = view.askDescription();
+        assertEquals("Descripción del momento", desc);
+    }
 }
