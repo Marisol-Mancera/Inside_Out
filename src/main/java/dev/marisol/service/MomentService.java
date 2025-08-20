@@ -3,6 +3,7 @@ package dev.marisol.service;
 import dev.marisol.model.Emotion;
 import dev.marisol.model.Moment;
 import java.util.List;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,11 @@ public class MomentService {
 
     }
 
-    public void addMoment(Moment moment) {
-        this.moments.add(moment);
-    }
+   public void addMoment(Moment moment) {
+    LocalDate now = LocalDate.now();
+    moment.setModificationDate(now);   
+    this.moments.add(moment); 
+}
 
     public void deleteMoment(int id) {
         moments.removeIf(moment -> moment.getId() == id);

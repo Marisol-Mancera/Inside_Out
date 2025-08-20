@@ -102,4 +102,30 @@ public class MomentServiceTest {
         assertEquals(2, filterdByMonthMoments.size());
 
     }
+
+    @Test
+    public void addMomentShouldSetCreationAndModificationDates(){
+        MomentService service = new MomentService();
+
+        Moment moment = new Moment(
+                1,
+                "Primer día de clases",
+                "Muy emocionante",
+                Emotion.HAPPINESS,
+                LocalDate.of(2024, 9, 1)
+        );
+
+        service.addMoment(moment);
+
+        List<Moment> all = service.getAllMoments();
+
+        assertEquals(1, all.size());
+
+        Moment saved = all.get(0);
+        LocalDate today = LocalDate.now();
+
+        assertEquals(today, saved.getCreationDate());
+        assertEquals(today, saved.getModificationDate());
+
+    }
 }
