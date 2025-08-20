@@ -261,21 +261,33 @@ public class MainControllerTest {
 
     @Test
     void shouldShowNoResultsMessageWhenFilterReturnsEmptyList() {
-    String simulatedInput = "4\n5\n";
-    System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        String simulatedInput = "4\n5\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
-    MomentController mockMomentController = Mockito.mock(MomentController.class);
-    Mockito.when(mockMomentController.filterMoments()).thenReturn(List.of());
+        MomentController mockMomentController = Mockito.mock(MomentController.class);
+        Mockito.when(mockMomentController.filterMoments()).thenReturn(List.of());
 
-    MainController controller = new MainController(new Scanner(System.in));
-    controller.setMomentController(mockMomentController);
+        MainController controller = new MainController(new Scanner(System.in));
+        controller.setMomentController(mockMomentController);
 
-    controller.start();
+        controller.start();
 
-    String output = outContent.toString();
-    assertTrue(output.contains("Filtrar los momentos"));
-    assertTrue(output.contains("No hay momentos registrados."));
-}
+        String output = outContent.toString();
+        assertTrue(output.contains("Filtrar los momentos"));
+        assertTrue(output.contains("No hay momentos registrados."));
+    }
 
+    @Test
+    void shouldExitWhenOptionFiveIsChosen() {
+        String simulatedInput = "5\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        MainController controller = new MainController(new Scanner(System.in));
+        controller.start();
+
+        String output = outContent.toString();
+        assertTrue(output.contains("5. Salir"));
+        assertTrue(output.contains("Hasta la próxima!!!"));
+    }
 
 }
