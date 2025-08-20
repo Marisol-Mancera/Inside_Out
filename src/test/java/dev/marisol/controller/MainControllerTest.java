@@ -69,7 +69,7 @@ public class MainControllerTest {
 
         String output = outContent.toString();
         assertTrue(output.contains("1. Añadir momento"));
-        assertTrue(output.contains("Descripción del momento:"));
+        assertTrue(output.contains("Ingrese la descripción:"));
     }
 
     @Test
@@ -256,7 +256,7 @@ public class MainControllerTest {
         String output = outContent.toString();
         assertTrue(output.contains("Filtrar los momentos"));
         assertTrue(output.contains("Examen aprobado"));
-        assertTrue(output.contains("S"));
+        assertTrue(output.contains("10/06/2024")); 
     }
 
     @Test

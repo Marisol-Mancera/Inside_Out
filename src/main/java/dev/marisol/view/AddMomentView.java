@@ -65,7 +65,7 @@ public class AddMomentView {
         return date;
     }
 
-    // 🔹 Método opcional: se deja comentado porque no forma parte del enunciado actual
+    //  Método opcional: se deja comentado porque no forma parte del enunciado actual
     /*
     public boolean askIsPositive() {
         while (true) {
