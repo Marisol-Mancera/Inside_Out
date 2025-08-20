@@ -33,9 +33,16 @@ public class AddMomentViewTest {
         assertEquals("Descripción del momento", desc);
     }
 
-     @Test
+    @Test
     void askDate_shouldParseValidDDMMYYYY() {
         AddMomentView view = createViewWithInput("01/05/2024\n");
+        LocalDate date = view.askDate();
+        assertEquals(LocalDate.of(2024, 5, 1), date);
+    }
+
+    @Test
+    void askDate_shouldRetryOnInvalidAndThenParse() {
+        AddMomentView view = createViewWithInput("2024-05-01\n01/05/2024\n");
         LocalDate date = view.askDate();
         assertEquals(LocalDate.of(2024, 5, 1), date);
     }
