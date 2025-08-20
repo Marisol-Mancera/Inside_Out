@@ -7,7 +7,6 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import java.util.List;
-import java.util.Arrays;
 import java.time.LocalDate;
 import dev.marisol.model.Moment;
 import dev.marisol.service.MomentService;
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 public class MainControllerTest {
 
@@ -239,4 +237,45 @@ public class MainControllerTest {
         assertTrue(output.contains("Filtrar los momentos"));
         assertTrue(output.contains("Día feliz"));
     }
+
+    @Test
+    void shouldShowMonthMomentsWhenOptionFourByDateIsChosen() {
+        String simulatedInput = "4\n5\n";
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+        MomentController mockMomentController = Mockito.mock(MomentController.class);
+        List<Moment> filtered = List.of(
+                new Moment(30, "Examen aprobado", "Feliz", Emotion.HAPPINESS, LocalDate.of(2024, 6, 10)));
+        Mockito.when(mockMomentController.filterMoments()).thenReturn(filtered);
+
+        MainController controller = new MainController(new Scanner(System.in));
+        controller.setMomentController(mockMomentController);
+
+        controller.start();
+
+        String output = outContent.toString();
+        assertTrue(output.contains("Filtrar los momentos"));
+        assertTrue(output.contains("Examen aprobado"));
+        assertTrue(output.contains("S"));
+    }
+
+    @Test
+    void shouldShowNoResultsMessageWhenFilterReturnsEmptyList() {
+    String simulatedInput = "4\n5\n";
+    System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+
+    MomentController mockMomentController = Mockito.mock(MomentController.class);
+    Mockito.when(mockMomentController.filterMoments()).thenReturn(List.of());
+
+    MainController controller = new MainController(new Scanner(System.in));
+    controller.setMomentController(mockMomentController);
+
+    controller.start();
+
+    String output = outContent.toString();
+    assertTrue(output.contains("Filtrar los momentos"));
+    assertTrue(output.contains("No hay momentos registrados."));
+}
+
+
 }
