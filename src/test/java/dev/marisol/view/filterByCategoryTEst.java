@@ -24,11 +24,17 @@ class FilterByCategoryViewTest {
 
     @Test
     void shouldReturnTrueWhenUserSelectsPositive() {
-        // Simula que el usuario teclea "1"
+        //simula que el usuario teclea "1"
         FilterByCategoryView view = createWithInput("1\n");
         boolean result = view.filterCategory();
         assertTrue(result, "Debe devolver true cuando el usuario selecciona positivo");
     }
 
-   
+    @Test
+    void shouldReturnFalseWhenUserSelectsNegative() {
+        //ssimula que el usuario teclea "2"
+        FilterByCategoryView view = createWithInput("2\n");
+        boolean result = view.filterCategory();
+        assertFalse(result, "Debe devolver false cuando el usuario selecciona negativo");
+    }
 }
