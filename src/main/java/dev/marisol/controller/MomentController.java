@@ -5,83 +5,90 @@ import dev.marisol.model.Moment;
 import dev.marisol.service.MomentService;
 import dev.marisol.view.AddMomentView;
 import dev.marisol.view.DeleteMomentView;
-import dev.marisol.view.FilterByDateOfView;
-import dev.marisol.view.FilterByEmotionView;
-import dev.marisol.view.FilterMomentListView;
+import dev.marisol.view.FilterMomentListView;   
+import dev.marisol.view.FilterByEmotionView;    
+import dev.marisol.view.FilterByDateOfView;     
+import dev.marisol.view.FilterByCategoryView;   
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class MomentController {
 
     private final AddMomentView addMomentView;
-    private MomentService momentService;
     private final DeleteMomentView deleteView;
-    private final FilterMomentListView filterView;       
+    private final FilterMomentListView filterView;
     private final FilterByEmotionView filterByEmotionView;
-    private final FilterByDateOfView filterByDateOfView;      
+    private final FilterByDateOfView filterByDateOfView;
+    private final FilterByCategoryView filterByCategoryView;
+
+    private MomentService momentService;
 
     public MomentController(AddMomentView addMomentView,
                             MomentService momentService,
                             DeleteMomentView deleteMomentView,
-                            FilterMomentListView filterView,         
+                            FilterMomentListView filterView,
                             FilterByEmotionView filterEmotionView,
-                            FilterByDateOfView filterDateView) {        
-        this.addMomentView = Objects.requireNonNull(addMomentView);
-        this.momentService = Objects.requireNonNull(momentService);
-        this.deleteView = Objects.requireNonNull(deleteMomentView);
-        this.filterView = Objects.requireNonNull(filterView);
-        this.filterByEmotionView = Objects.requireNonNull(filterEmotionView);
-        this.filterByDateOfView = Objects.requireNonNull(filterDateView);  
+                            FilterByDateOfView filterDateOfView,
+                            FilterByCategoryView filterByCategoryView) {
+
+        this.addMomentView = addMomentView;
+        this.momentService = momentService;
+        this.deleteView = deleteMomentView;
+        this.filterView = filterView;
+        this.filterByEmotionView = filterEmotionView;
+        this.filterByDateOfView = filterDateOfView;
+        this.filterByCategoryView = filterByCategoryView;
     }
 
     public void setMomentService(MomentService service) {
-        this.momentService = Objects.requireNonNull(service);
+        this.momentService = service;
     }
 
     public String addMoment() {
         try {
-            String title = addMomentView.askTitle();
-            String description = addMomentView.askDescription();
-            Emotion emotion = addMomentView.askEmotion();
-            LocalDate date = addMomentView.askDate();
+            AddMomentDTO dto = new AddMomentDTO(
+                addMomentView.askTitle(),
+                addMomentView.askDescription(),
+                addMomentView.askEmotion(),
+                addMomentView.askDate(),
+                addMomentView.askIfIsGood()
+            );
 
-            int nextId = momentService.getAllMoments().size() + 1;
-            Moment toSave = new Moment(nextId, title, description, emotion, date);
+            momentService.addMoment(dto);
 
-            momentService.addMoment(toSave);
             return "Momento añadido correctamente.";
         } catch (Exception e) {
             return "Error al añadir el momento: " + e.getMessage();
         }
     }
 
-    public List<Moment> listMoments() {
-        List<Moment> moments = momentService.getAllMoments();
-        return (moments != null) ? moments : Collections.emptyList();
+    public List<String> listMoments() {
+        return momentService.listMoments();
     }
 
     public String deleteMoment() {
-        int id = deleteView.delete();
-        momentService.deleteMoment(id);
-        return "Momento eliminado correctamente.";
+        int opcion = deleteView.delete();
+        return momentService.deleteMoment(opcion);
     }
 
-    public List<Moment> filterMoments() {
+    public List<String> filterMoments() {
         int option = filterView.filterMoments();
         switch (option) {
             case 1: {
-                Emotion selected = filterByEmotionView.filterEmotion();
-                return momentService.filterByEmotion(selected);
+                Emotion selectedEmotion = filterByEmotionView.filterEmotion();
+                return momentService.filterByEmotion(selectedEmotion);
             }
             case 2: {
-                LocalDate selectedDate = filterByDateOfView.filterDate();   
-                return momentService.getMonthMoments(selectedDate.getMonthValue(), selectedDate.getYear());
+                LocalDate selectedDate = filterByDateOfView.filterDate();
+                return momentService.filterByDate(selectedDate);
+            }
+            case 3: {
+                boolean category = filterByCategoryView.filterCategory(); 
+                return momentService.filterByCategory(category);
             }
             default:
-                return Collections.emptyList();
+                return List.of("Opción no válida");
         }
     }
 }

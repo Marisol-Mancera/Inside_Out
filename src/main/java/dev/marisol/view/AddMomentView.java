@@ -15,35 +15,37 @@ public class AddMomentView {
     }
 
     public String askTitle() {
-        System.out.println("Ingrese el título:");
+        System.out.println("Ingrese el título del momento");
+        System.out.println();
         return scanner.nextLine();
     }
 
     public String askDescription() {
-        System.out.println("Ingrese la descripción:");
+        System.out.println("Ingrese la descripción del momento");
+        System.out.println();
         return scanner.nextLine();
     }
 
     public Emotion askEmotion() {
-        System.out.println("Selecciona una emoción:");
-        Emotion[] emotions = Emotion.values();
+        System.out.println("Seleccione una emoción:");
+        System.out.println();
 
+        Emotion[] emotions = Emotion.values();
         for (int i = 0; i < emotions.length; i++) {
-            System.out.println((i + 1) + ". " 
-                + emotions[i].name().charAt(0) 
-                + emotions[i].name().substring(1).toLowerCase());
+            String pretty = emotions[i].name().charAt(0) + emotions[i].name().substring(1).toLowerCase();
+            System.out.println((i + 1) + ". " + pretty);
         }
 
         int option = -1;
         while (option < 1 || option > emotions.length) {
-            System.out.print("Ingrese su opción: ");
+            System.out.println("Ingrese el número de la opción:");
             try {
                 option = Integer.parseInt(scanner.nextLine());
                 if (option < 1 || option > emotions.length) {
-                    System.out.println("Número no válido, intente de nuevo.");
+                    System.out.println("El número seleccionado no es una opción válida. Intente de nuevo.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida, solo números.");
+                System.out.println("Opción no válida, solo admite números. Intente de nuevo.");
             }
         }
         return emotions[option - 1];
@@ -65,7 +67,27 @@ public class AddMomentView {
         return date;
     }
 
-    //  Método opcional: se deja comentado porque no forma parte del enunciado actual
+    public boolean askIsPositive() {
+        System.out.println("Clasifique el momento:");
+        System.out.println("1 - Positivo");
+        System.out.println("2 - Negativo");
+        System.out.println();
+
+        int option = -1;
+        while (option < 1 || option > 2) {
+            try {
+                option = Integer.parseInt(scanner.nextLine());
+                if (option < 1 || option > 2) {
+                    System.out.println("Opción inválida. Solo puede ingresar 1 o 2.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Solo puede insertar números 1 o 2.");
+            }
+        }
+        return option == 1;
+    }
+
+     //  Método opcional: se deja comentado porque no forma parte del enunciado actual
     /*
     public boolean askIsPositive() {
         while (true) {

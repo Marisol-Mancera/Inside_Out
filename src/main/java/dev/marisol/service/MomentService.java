@@ -1,87 +1,82 @@
-package dev.marisol.service;
-
-import dev.marisol.model.Emotion;
-import dev.marisol.model.Moment;
-
-import dev.marisol.repository.MomentsRepository;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
 public class MomentService {
-
-    private MomentsRepository repository; 
-    private final List<Moment> inMemory = new ArrayList<>();
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private int idSeq = 0;
-
-    public MomentService() {
-    }
+    private MomentsRepository repository;
+    private int  id;
+     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public MomentService(MomentsRepository repository) {
         this.repository = repository;
+        this.id=0;
     }
 
-    public List<Moment> getAllMoments() {
-        if (repository != null) {
-            return repository.findAll();
-        }
-        return inMemory;
+    public void addMoment(AddMomentDTO dto) {
+         id ++;
+
+        Moment moment = new Moment(
+            id,
+            dto.getTitle(),
+            dto.getDescription(),
+            dto.getEmotion(),
+            dto.getMomentDate(),
+            dto.getIsGood()
+        );
+      
+        moment.setModifiedDate(LocalDate.now());
+
+        repository.addMoment(moment);
+    }
+private String formatMoment(Moment moment) {
+        String emotionFormatted =
+                moment.getEmotion().name().charAt(0) +
+                moment.getEmotion().name().substring(1).toLowerCase();
+        String category;
+        if(moment.isGood()){
+            category="Bueno";
+        }    else{
+            category="Malo";
+        }    
+
+        return moment.getId() + "-" +
+                "Ocurrió el: " + moment.getMomentDate().format(formatter) +
+                ". Título: " + moment.getTitle() +
+                ". Descripción: " + moment.getDescription() +
+                ". Emoción: " + emotionFormatted +
+                ". Categoría: "+ category;
+
+    }
+    public List<String> listMoments() {
+        return repository.findAll()
+                .stream()
+                .map(this::formatMoment) 
+                .collect(Collectors.toList());
+    }
+    public String deleteMoment(int opcion){
+       
+    boolean deleted = repository.deleteMoment(opcion);
+    if (deleted) {
+        return "Momento vivido eliminado correctamente";
+    } else {
+        return "El identificador proporcionado no existe en la lista";
+    }
     }
 
-    public void addMoment(Moment moment) {
-        if (moment.getId() == 0) {
-            idSeq = Math.max(idSeq, getAllMoments().stream().mapToInt(Moment::getId).max().orElse(0));
-            moment.setModificationDate(LocalDate.now());
-        }
-        if (repository != null) {
-            repository.addMoment(moment);
-        } else {
-            inMemory.add(moment);
-        }
-    }
+    public List<String> filterByEmotion(Emotion emotion){
+       return repository.filterByEmotion(emotion)
+                .stream()
+                .map(this::formatMoment) 
+                .collect(Collectors.toList());
 
-    public void deleteMoment(int id) {
-        if (repository != null) {
-            repository.deleteMoment(id);
-        } else {
-            inMemory.removeIf(m -> m.getId() == id);
-        }
     }
-
-    public List<Moment> filterByEmotion(Emotion emotion) {
-        if (repository != null) {
-            return repository.filterByEmotion(emotion);
-        }
-        List<Moment> out = new ArrayList<>();
-        for (Moment m : inMemory) {
-            if (m.getEmotion() == emotion) out.add(m);
-        }
-        return out;
+     public List<String> filterByDate(LocalDate date){
+         return repository.filterByDate(date)
+                .stream()
+                .map(this::formatMoment) 
+                .collect(Collectors.toList());
     }
-
-    public List<Moment> getMonthMoments(int month, int year) {
-        if (repository != null) {
-            return repository.findAll().stream()
-                    .filter(m -> m.getMomentDate() != null
-                            && m.getMomentDate().getMonthValue() == month
-                            && m.getMomentDate().getYear() == year)
-                    .collect(Collectors.toList());
-        }
-        List<Moment> out = new ArrayList<>();
-        for (Moment m : inMemory) {
-            if (m.getMomentDate() != null
-                    && m.getMomentDate().getMonthValue() == month
-                    && m.getMomentDate().getYear() == year) {
-                out.add(m);
-            }
-        }
-        return out;
+    public List<String> filterByCategory(boolean category){
+         return repository.filterByCategory(category)
+                .stream()
+                .map(this::formatMoment) 
+                .collect(Collectors.toList());
     }
 
 }
