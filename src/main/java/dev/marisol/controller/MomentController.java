@@ -19,14 +19,14 @@ public class MomentController {
     private final AddMomentView addMomentView;
     private MomentService momentService;
     private final DeleteMomentView deleteView;
-    private final FilterMomentsListView filterView;       // corregido
+    private final FilterMomentListView filterView;       // corregido
     private final FilterByEmotionView filterByEmotionView;
     private final FilterByDateView filterByDateView;      // corregido
 
     public MomentController(AddMomentView addMomentView,
                             MomentService momentService,
                             DeleteMomentView deleteMomentView,
-                            FilterMomentsListView filterView,         // corregido
+                            FilterMomentListView filterView,         // corregido
                             FilterByEmotionView filterEmotionView,
                             FilterByDateView filterDateView) {        // corregido
         this.addMomentView = Objects.requireNonNull(addMomentView);
