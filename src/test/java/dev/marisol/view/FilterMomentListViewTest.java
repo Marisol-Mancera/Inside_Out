@@ -42,4 +42,11 @@ class FilterMomentListViewTest {
         int option = view.filterMoments();
         assertEquals(2, option);
     }
+
+    @Test
+    void shouldRejectOutOfRangeThenAcceptValid() {
+        FilterMomentListView view = viewWithInput("9\n1\n");
+        int option = view.filterMoments();
+        assertEquals(1, option);
+    }
 }
