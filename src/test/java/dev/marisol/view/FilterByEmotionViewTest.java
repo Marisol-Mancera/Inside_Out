@@ -24,5 +24,11 @@ class FilterByEmotionViewTest {
         assertEquals(Emotion.HAPPINESS, result);
     }
 
-    
+    @Test
+    void shouldRetryOnInvalidThenReturnSadnessWhen2() {
+        // Primero inválidos: texto y fuera de rango, luego válido "2" (SADNESS)
+        FilterByEmotionView view = viewWithInput("abc\n11\n2\n");
+        Emotion result = view.filterEmotion();
+        assertEquals(Emotion.SADNESS, result);
+    }
 }
