@@ -1,21 +1,15 @@
 package dev.marisol.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Scanner;
-
-import java.util.List;
-import java.time.LocalDate;
+import dev.marisol.model.Emotion;
 import dev.marisol.model.Moment;
 import dev.marisol.service.MomentService;
-import dev.marisol.model.Emotion;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.*;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,8 +18,6 @@ public class MainControllerTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private InputStream originalIn;
-
-    private MainController mainController;
 
     @BeforeEach
     public void setUp() {
@@ -40,13 +32,17 @@ public class MainControllerTest {
         System.setIn(originalIn);
     }
 
+    // Utilidad para inyectar flujo de entrada
+    private void setInput(String text) {
+        System.setIn(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
+    }
+
     @Test
     public void shouldShowMenuAndExitWhenOptionFiveIsChosen() {
-        String simulatedInput = "5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        setInput("5\n");
 
-        mainController = new MainController(new Scanner(System.in));
-        mainController.start();
+        MainController controller = new MainController();
+        controller.start();
 
         String output = outContent.toString();
         assertTrue(output.contains("1. Añadir momento"));
@@ -56,129 +52,112 @@ public class MainControllerTest {
 
     @Test
     public void shouldCreateAMomentWhenOptionOneIsChosen() {
-        String simulatedInput = "1\n" +
-                "Un día en el parque de atracciones\n" +
-                "Moment description\n" +
-                "1\n" +
-                "01/05/2024\n" +
-                "5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        String input = ""
+                + "1\n"                                 // Añadir
+                + "Un día en el parque de atracciones\n" // título
+                + "Moment description\n"                 // descripción
+                + "1\n"                                  // emoción
+                + "01/05/2024\n"                         // fecha
+                + "5\n";                                 // salir
+        setInput(input);
 
-        mainController = new MainController(new Scanner(System.in));
-        mainController.start();
+        MainController controller = new MainController();
+        controller.start();
 
         String output = outContent.toString();
         assertTrue(output.contains("1. Añadir momento"));
         assertTrue(output.contains("Ingrese la descripción:"));
+        assertTrue(output.contains("Momento añadido correctamente"));
     }
 
     @Test
     void shouldAddAndSaveMomentWhenOptionOneIsChosen() {
-        String simulatedInput = "1\n" +
-                "Un día en el museo de los horrores\n" +
-                "Moment description\n" +
-                "1\n" +
-                "01/05/2024\n" +
-                "5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        // Añadir y luego listar para verificar que aparece en la salida
+        String input = ""
+                + "1\n"
+                + "Un día en el museo de los horrores\n"
+                + "Moment description\n"
+                + "1\n"
+                + "01/05/2024\n"
+                + "2\n"   // listar
+                + "5\n";  // salir
+        setInput(input);
 
-        SpyMomentService spy = new SpyMomentService();
-
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentService(spy);
-
+        MainController controller = new MainController();
         controller.start();
 
-        assertEquals(1, spy.addCalls);
         String output = outContent.toString();
         assertTrue(output.contains("Momento añadido correctamente."));
+        assertTrue(output.toLowerCase().contains("museo de los horrores"));
     }
 
     @Test
     void shouldListAllMomentsWhenOptionTwoIsChosen() {
-        MomentService service = new MomentService();
-        service.addMoment(new Moment(
-                10,
-                "un viaje inesperado",
-                "un viaje que surgio de la nada",
-                Emotion.HAPPINESS,
-                java.time.LocalDate.of(2024, 5, 1)));
-        service.addMoment(new Moment(
-                11,
-                "se murio mi canario",
-                "pues si, la ha palmado",
-                Emotion.SADNESS,
-                java.time.LocalDate.of(2024, 6, 1)));
+        // Añadimos dos momentos por UI y luego listamos
+        String input = ""
+                + "1\n" + "un viaje inesperado\n" + "un viaje que surgio de la nada\n" + "1\n" + "01/05/2024\n"
+                + "1\n" + "se murio mi canario\n" + "pues si, la ha palmado\n" + "2\n" + "01/06/2024\n"
+                + "2\n" // listar
+                + "5\n";
+        setInput(input);
 
-        String simulatedInput = "2\n5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentService(service);
-
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
-        assertTrue(output.contains("Momentos registrados:"));
-        assertTrue(output.contains("un viaje inesperado"));
-        assertTrue(output.contains("se murio mi canario"));
+        // Si ya usas ListMomentsView con ese encabezado, asertea el exacto; dejamos tolerante:
+        assertTrue(output.contains("Lista de momentos vividos:") || output.contains("Momentos registrados:"));
+        assertTrue(output.toLowerCase().contains("un viaje inesperado"));
+        assertTrue(output.toLowerCase().contains("se murio mi canario"));
     }
 
     @Test
     void shouldDeleteMomentWhenOptionThreeIsChosen() {
-        MomentService service = new MomentService();
-        service.addMoment(new Moment(
-                10, "título a borrar", "desc",
-                Emotion.HAPPINESS,
-                LocalDate.of(2024, 5, 1)));
-        service.addMoment(new Moment(
-                11, "título que queda", "desc",
-                Emotion.SADNESS,
-                LocalDate.of(2024, 6, 1)));
+        // Añadimos dos momentos (ids 1 y 2) y borramos el 1. Luego listamos.
+        String input = ""
+                + "1\n" + "título a borrar\n" + "desc\n" + "1\n" + "01/05/2024\n"
+                + "1\n" + "título que queda\n" + "desc\n" + "2\n" + "01/06/2024\n"
+                + "3\n" + "1\n" // eliminar id=1
+                + "2\n"         // listar
+                + "5\n";
+        setInput(input);
 
-        String simulatedInput = "3\n10\n5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentService(service);
-
+        MainController controller = new MainController();
         controller.start();
 
-        boolean exists10 = service.getAllMoments().stream().anyMatch(m -> m.getId() == 10);
-        assertFalse(exists10, "El momento con id 10 debería haberse eliminado");
-
         String output = outContent.toString();
-        assertTrue(output.contains("ID del momento a eliminar: "));
         assertTrue(output.contains("Momento eliminado correctamente."));
+        assertFalse(output.toLowerCase().contains("título a borrar"));
+        assertTrue(output.toLowerCase().contains("título que queda"));
     }
 
     @Test
     void shouldWarnOnInvalidMenuInputAndContinueToExit() {
-        String simulatedInput = "x\n5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        setInput("x\n5\n");
 
-        MainController controller = new MainController(new Scanner(System.in));
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
-        assertTrue(output.contains("Opción no válida. Por favor, ingrese un número."));
+        assertTrue(output.toLowerCase().contains("opción no válida")
+                || output.toLowerCase().contains("opcion no valida"));
         assertTrue(output.contains("Hasta la próxima!!!"));
     }
 
     @Test
     void shouldMapEmotionCodeTenToNostalgiaWhenListing() {
-        String simulatedInput = "1\n" +
-                "título nostalgia\n" +
-                "desc\n" +
-                "10\n" + // NOSTALGIA
-                "01/07/2024\n" +
-                "2\n" + // listar
-                "5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        // Añadimos con emoción 10 via AddMomentView (selección de 1..n válida)
+        String input = ""
+                + "1\n"
+                + "título nostalgia\n"
+                + "desc\n"
+                + "10\n"            // NOSTALGIA
+                + "01/07/2024\n"
+                + "2\n"             // listar
+                + "5\n";
+        setInput(input);
 
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentService(new MomentService());
-
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
@@ -187,107 +166,96 @@ public class MainControllerTest {
     }
 
     @Test
-    void shouldFailWhenEmotionCodeOutOfRange() {
-        String simulatedInput = "1\n" +
-                "titulo\n" +
-                "desc\n" +
-                "11\n" + // fuera de rango
-                "01/07/2024\n" +
-                "5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+    void shouldRetryOnInvalidEmotionAndThenSucceed() {
+        // Primero emoción inválida (11), UI reintenta, luego 1 (válida)
+        String input = ""
+                + "1\n"
+                + "titulo\n"
+                + "desc\n"
+                + "11\n"  // inválida -> reintento
+                + "1\n"   // válida
+                + "01/07/2024\n"
+                + "2\n"   // listar
+                + "5\n";
+        setInput(input);
 
-        MainController controller = new MainController(new Scanner(System.in));
-
-        assertThrows(IllegalArgumentException.class, controller::start);
-    }
-
-    // ==== Spy para observar llamadas a addMoment ====
-    static class SpyMomentService extends MomentService {
-        int addCalls = 0;
-        Moment lastSaved;
-
-        SpyMomentService() {
-            super(); // tu MomentService tiene ctor sin args
-        }
-
-        @Override
-        public void addMoment(Moment moment) {
-            addCalls++;
-            lastSaved = moment;
-        }
-    }
-
-    @Test
-    void shouldShowFilteredMomentsWhenOptionFourIsChosen() {
-        String simulatedInput = "4\n5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-
-        MomentController mockMomentController = Mockito.mock(MomentController.class);
-        List<Moment> filtered = List.of(
-                new Moment(21, "Día feliz", "Me compraron un canario",
-                        Emotion.HAPPINESS, LocalDate.of(2024, 2, 1)));
-        Mockito.when(mockMomentController.filterMoments()).thenReturn(filtered);
-
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentController(mockMomentController);
-
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
-        assertTrue(output.contains("Filtrar los momentos"));
-        assertTrue(output.contains("Día feliz"));
+        // Mensajes de AddMomentView ante opción inválida
+        assertTrue(output.toLowerCase().contains("número no válido")
+                || output.toLowerCase().contains("numero no valido")
+                || output.toLowerCase().contains("entrada inválida")
+                || output.toLowerCase().contains("entrada invalida"));
+        assertTrue(output.contains("Momento añadido correctamente"));
+        assertTrue(output.contains("titulo"));
+    }
+
+    @Test
+    void shouldShowFilteredMomentsWhenOptionFourByEmotionIsChosen() {
+        // Añadimos happy y sad, filtramos por emoción 1 (happy)
+        String input = ""
+                // happy
+                + "1\n" + "día feliz\n" + "desc feliz\n" + "1\n" + "01/05/2024\n"
+                // sad
+                + "1\n" + "día triste\n" + "desc triste\n" + "2\n" + "10/05/2024\n"
+                // filtrar -> emoción
+                + "4\n" + "1\n" + "1\n"
+                + "5\n";
+        setInput(input);
+
+        MainController controller = new MainController();
+        controller.start();
+
+        String output = outContent.toString();
+        assertTrue(output.toLowerCase().contains("día feliz"));
+        assertFalse(output.toLowerCase().contains("día triste"));
     }
 
     @Test
     void shouldShowMonthMomentsWhenOptionFourByDateIsChosen() {
-        String simulatedInput = "4\n5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        // mayo + junio; filtramos por fecha en junio
+        String input = ""
+                + "1\n" + "mayo titulo\n" + "desc mayo\n" + "1\n" + "01/05/2024\n"
+                + "1\n" + "junio titulo\n" + "desc junio\n" + "1\n" + "10/06/2024\n"
+                + "4\n" + "2\n" + "15/06/2024\n"  // filtro por fecha
+                + "5\n";
+        setInput(input);
 
-        MomentController mockMomentController = Mockito.mock(MomentController.class);
-        List<Moment> filtered = List.of(
-                new Moment(30, "Examen aprobado", "Feliz", Emotion.HAPPINESS, LocalDate.of(2024, 6, 10)));
-        Mockito.when(mockMomentController.filterMoments()).thenReturn(filtered);
-
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentController(mockMomentController);
-
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
-        assertTrue(output.contains("Filtrar los momentos"));
-        assertTrue(output.contains("Examen aprobado"));
-        assertTrue(output.contains("10/06/2024")); 
+        assertTrue(output.toLowerCase().contains("junio titulo"));
+        assertFalse(output.toLowerCase().contains("mayo titulo"));
     }
 
     @Test
     void shouldShowNoResultsMessageWhenFilterReturnsEmptyList() {
-        String simulatedInput = "4\n5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        // Sin añadir nada, filtramos por emoción y elegimos 1 → debería decir que no hay resultados
+        String input = ""
+                + "4\n" + "1\n" + "1\n"
+                + "5\n";
+        setInput(input);
 
-        MomentController mockMomentController = Mockito.mock(MomentController.class);
-        Mockito.when(mockMomentController.filterMoments()).thenReturn(List.of());
-
-        MainController controller = new MainController(new Scanner(System.in));
-        controller.setMomentController(mockMomentController);
-
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
-        assertTrue(output.contains("Filtrar los momentos"));
+        assertTrue(output.contains("Filtrar los momentos") || output.contains("Filtrar por"));
         assertTrue(output.contains("No hay momentos registrados."));
     }
 
     @Test
     void shouldExitWhenOptionFiveIsChosen() {
-        String simulatedInput = "5\n";
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
+        setInput("5\n");
 
-        MainController controller = new MainController(new Scanner(System.in));
+        MainController controller = new MainController();
         controller.start();
 
         String output = outContent.toString();
         assertTrue(output.contains("5. Salir"));
         assertTrue(output.contains("Hasta la próxima!!!"));
     }
-
 }

@@ -29,7 +29,7 @@ public class MomentControllerTest {
     private DeleteMomentView deleteView;
     private FilterMomentListView filterView;         
     private FilterByEmotionView filterByEmotionView;
-    private FilterByDateView filterByDateView;     
+    private FilterByDateOfView filterByDateView;     
 
     private MomentController controller;
 
@@ -38,9 +38,9 @@ public class MomentControllerTest {
         addMomentView = mock(AddMomentView.class);
         momentService = mock(MomentService.class);
         deleteView = mock(DeleteMomentView.class);
-        filterView = mock(FilterMomentListView.class);        // corregido
+        filterView = mock(FilterMomentListView.class);       
         filterByEmotionView = mock(FilterByEmotionView.class);
-        filterByDateView = mock(FilterByDateView.class);       // corregido
+        filterByDateView = mock(FilterByDateOfView.class);      
 
         controller = new MomentController(
                 addMomentView, momentService, deleteView, filterView, filterByEmotionView, filterByDateView
@@ -50,20 +50,16 @@ public class MomentControllerTest {
 
     @Test
     void addMoment_success_callsServiceAndReturnsMessage() {
-        // Arrange
         when(addMomentView.askTitle()).thenReturn("Walk");
         when(addMomentView.askDescription()).thenReturn("A nice day out");
         when(addMomentView.askEmotion()).thenReturn(Emotion.HAPPINESS);
         when(addMomentView.askDate()).thenReturn(LocalDate.of(2023, 11, 25));
-        when(momentService.getAllMoments()).thenReturn(Collections.emptyList()); // para id = size+1
+        when(momentService.getAllMoments()).thenReturn(Collections.emptyList()); 
 
-        // Act
         String result = controller.addMoment();
 
-        // Assert mensaje
         assertThat(result, is("Momento añadido correctamente"));
 
-        // Assert llamada y contenido del Moment
         ArgumentCaptor<Moment> captor = ArgumentCaptor.forClass(Moment.class);
         verify(momentService, times(1)).addMoment(captor.capture());
         Moment saved = captor.getValue();
@@ -133,7 +129,7 @@ public class MomentControllerTest {
     @Test
     void filterMoments_byDate_returnsMonthList() {
         when(filterView.filterMoments()).thenReturn(2);
-        when(filterByDateOfView.filterDate()).thenReturn(LocalDate.of(2024, 6, 1));
+        when(filterByDateView.filterDate()).thenReturn(LocalDate.of(2024, 6, 1));
 
         List<Moment> june = Arrays.asList(
                 new Moment(2, "June note", "desc", Emotion.SADNESS, LocalDate.of(2024, 6, 3))
@@ -154,7 +150,7 @@ public class MomentControllerTest {
         List<Moment> result = controller.filterMoments();
 
         assertThat(result, empty());
-        verifyNoInteractions(filterByEmotionView, filterByDateOfView);
+        verifyNoInteractions(filterByEmotionView, filterByDateView);
         verify(momentService, never()).filterByEmotion(any());
         verify(momentService, never()).getMonthMoments(anyInt(), anyInt());
     }

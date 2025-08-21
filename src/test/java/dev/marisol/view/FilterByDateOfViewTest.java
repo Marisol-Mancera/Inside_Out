@@ -26,7 +26,7 @@ class FilterByDateViewTest {
 
     @Test
     void shouldRetryOnInvalidThenReturnValidDate() {
-        // Primero inválido, luego válido
+
         FilterByDateOfView view = viewWithInput("2024-06-10\n10/06/2024\n");
         LocalDate date = view.filterDate();
         assertEquals(LocalDate.of(2024, 6, 10), date);

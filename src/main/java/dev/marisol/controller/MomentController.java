@@ -19,25 +19,24 @@ public class MomentController {
     private final AddMomentView addMomentView;
     private MomentService momentService;
     private final DeleteMomentView deleteView;
-    private final FilterMomentListView filterView;       // corregido
+    private final FilterMomentListView filterView;       
     private final FilterByEmotionView filterByEmotionView;
-    private final FilterByDateView filterByDateView;      // corregido
+    private final FilterByDateOfView filterByDateOfView;      
 
     public MomentController(AddMomentView addMomentView,
                             MomentService momentService,
                             DeleteMomentView deleteMomentView,
-                            FilterMomentListView filterView,         // corregido
+                            FilterMomentListView filterView,         
                             FilterByEmotionView filterEmotionView,
-                            FilterByDateView filterDateView) {        // corregido
+                            FilterByDateOfView filterDateView) {        
         this.addMomentView = Objects.requireNonNull(addMomentView);
         this.momentService = Objects.requireNonNull(momentService);
         this.deleteView = Objects.requireNonNull(deleteMomentView);
         this.filterView = Objects.requireNonNull(filterView);
         this.filterByEmotionView = Objects.requireNonNull(filterEmotionView);
-        this.filterByDateView = Objects.requireNonNull(filterDateView);  // corregido
+        this.filterByDateOfView = Objects.requireNonNull(filterDateView);  
     }
 
-    // Permite reinyectar el servicio (útil en tests si se necesita)
     public void setMomentService(MomentService service) {
         this.momentService = Objects.requireNonNull(service);
     }
@@ -78,7 +77,7 @@ public class MomentController {
                 return momentService.filterByEmotion(selected);
             }
             case 2: {
-                LocalDate selectedDate = filterByDateView.filterDate();   // corregido
+                LocalDate selectedDate = filterByDateOfView.filterDate();   
                 return momentService.getMonthMoments(selectedDate.getMonthValue(), selectedDate.getYear());
             }
             default:
