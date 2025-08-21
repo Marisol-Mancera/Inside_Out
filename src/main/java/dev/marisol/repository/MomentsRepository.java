@@ -1,7 +1,10 @@
 package dev.marisol.repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.marisol.model.Emotion;
 import dev. marisol.model.Moment;
 
 public class MomentsRepository {
@@ -12,5 +15,21 @@ public class MomentsRepository {
     }
     public List<Moment> findAll() {
         return momentList;
+    }
+
+    public boolean deleteMoment(int id){
+        return momentList.removeIf(m -> m.getId()==id);
+    }
+
+    public List<Moment> filterByEmotion(Emotion emotion){
+        return momentList.stream()
+        .filter (m -> m.getEmotion() == emotion)
+        .toList();
+    }
+
+    public List<Moment> filterByDate(LocalDate date){
+        return momentList.stream()
+        .filter(m -> m.getMomentDate().equals(date))
+        .toList();
     }
 }
