@@ -28,4 +28,12 @@ class FilterMomentListViewTest {
         int option = view.filterMoments();
         assertEquals(2, option);
     }
+
+     @Test
+    void shouldReturn3WhenUserChoosesValoracion() {
+        // usuario escribe "3" y Enter
+        FilterMomentListView view = viewWithInput("3\n");
+        int option = view.filterMoments();
+        assertEquals(3, option);
+    }
 }
