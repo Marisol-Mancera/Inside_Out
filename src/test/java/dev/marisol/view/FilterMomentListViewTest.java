@@ -17,11 +17,15 @@ class FilterMomentListViewTest {
 
     @Test
     void shouldReturn1WhenUserChoosesEmotion() {
-        // usuario escribe "1" y Enter
         FilterMomentListView view = viewWithInput("1\n");
         int option = view.filterMoments();
         assertEquals(1, option);
     }
 
-    
+    @Test
+    void shouldReturn2WhenUserChoosesDate() {
+        FilterMomentListView view = viewWithInput("2\n");
+        int option = view.filterMoments();
+        assertEquals(2, option);
+    }
 }
