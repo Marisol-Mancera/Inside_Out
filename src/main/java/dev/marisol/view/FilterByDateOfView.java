@@ -11,6 +11,8 @@ public class FilterByDateOfView {
     }
 
     public LocalDate filterDate() {
-        return LocalDate.now(); 
+        AddMomentView add = new AddMomentView(scanner);
+        return add.askDate();
     }
 }
+
