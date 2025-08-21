@@ -8,45 +8,46 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FilterMomentListViewTest {
+class FilterMomentsListViewTest {
 
-    private FilterMomentListView viewWithInput(String input) {
+    private FilterMomentsListView viewWithInput(String input) {
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-        return new FilterMomentListView(new Scanner(in));
+        return new FilterMomentsListView(new Scanner(in));
     }
 
     @Test
     void shouldReturn1WhenUserChoosesEmotion() {
-        FilterMomentListView view = viewWithInput("1\n");
+        FilterMomentsListView view = viewWithInput("1\n");
         int option = view.filterMoments();
         assertEquals(1, option);
     }
 
     @Test
     void shouldReturn2WhenUserChoosesDate() {
-        FilterMomentListView view = viewWithInput("2\n");
+        FilterMomentsListView view = viewWithInput("2\n");
         int option = view.filterMoments();
         assertEquals(2, option);
     }
 
-     @Test
+    @Test
     void shouldReturn3WhenUserChoosesValoracion() {
-        FilterMomentListView view = viewWithInput("3\n");
+        FilterMomentsListView view = viewWithInput("3\n");
         int option = view.filterMoments();
         assertEquals(3, option);
     }
 
     @Test
     void shouldRetryOnNonNumericThenAcceptValid() {
-        FilterMomentListView view = viewWithInput("abc\n2\n");
+        FilterMomentsListView view = viewWithInput("abc\n2\n");
         int option = view.filterMoments();
         assertEquals(2, option);
     }
 
     @Test
     void shouldRejectOutOfRangeThenAcceptValid() {
-        FilterMomentListView view = viewWithInput("9\n1\n");
+        FilterMomentsListView view = viewWithInput("9\n1\n");
         int option = view.filterMoments();
         assertEquals(1, option);
     }
+}
 }

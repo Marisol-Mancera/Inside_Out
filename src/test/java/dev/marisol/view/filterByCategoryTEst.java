@@ -37,4 +37,6 @@ class FilterByCategoryViewTest {
         boolean result = view.filterCategory();
         assertFalse(result, "Debe devolver false cuando el usuario selecciona negativo");
     }
+
+    
 }
