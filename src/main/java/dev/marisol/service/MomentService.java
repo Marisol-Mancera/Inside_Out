@@ -18,8 +18,9 @@ public class MomentService {
     private MomentService repository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private int id;
+    private 
 
-    public MomentService(MomentService repository) {
+    public MomentService(MomentsRepository repository) {
         this.repository = repository;
         this.id = 0;
     }
