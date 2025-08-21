@@ -32,7 +32,6 @@ public class MainControllerTest {
         System.setIn(originalIn);
     }
 
-    // Utilidad para inyectar flujo de entrada
     private void setInput(String text) {
         System.setIn(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
     }
@@ -53,12 +52,12 @@ public class MainControllerTest {
     @Test
     public void shouldCreateAMomentWhenOptionOneIsChosen() {
         String input = ""
-                + "1\n"                                 // Añadir
-                + "Un día en el parque de atracciones\n" // título
-                + "Moment description\n"                 // descripción
-                + "1\n"                                  // emoción
-                + "01/05/2024\n"                         // fecha
-                + "5\n";                                 // salir
+                + "1\n"                                 
+                + "Un día en el parque de atracciones\n" 
+                + "Moment description\n"                
+                + "1\n"                         
+                + "01/05/2024\n"           
+                + "5\n";       
         setInput(input);
 
         MainController controller = new MainController();
@@ -72,32 +71,13 @@ public class MainControllerTest {
 
     @Test
     void shouldAddAndSaveMomentWhenOptionOneIsChosen() {
-        // Añadir y luego listar para verificar que aparece en la salida
         String input = ""
                 + "1\n"
                 + "Un día en el museo de los horrores\n"
                 + "Moment description\n"
                 + "1\n"
                 + "01/05/2024\n"
-                + "2\n"   // listar
-                + "5\n";  // salir
-        setInput(input);
-
-        MainController controller = new MainController();
-        controller.start();
-
-        String output = outContent.toString();
-        assertTrue(output.contains("Momento añadido correctamente."));
-        assertTrue(output.toLowerCase().contains("museo de los horrores"));
-    }
-
-    @Test
-    void shouldListAllMomentsWhenOptionTwoIsChosen() {
-        // Añadimos dos momentos por UI y luego listamos
-        String input = ""
-                + "1\n" + "un viaje inesperado\n" + "un viaje que surgio de la nada\n" + "1\n" + "01/05/2024\n"
-                + "1\n" + "se murio mi canario\n" + "pues si, la ha palmado\n" + "2\n" + "01/06/2024\n"
-                + "2\n" // listar
+                + "2\n"   
                 + "5\n";
         setInput(input);
 
@@ -105,7 +85,23 @@ public class MainControllerTest {
         controller.start();
 
         String output = outContent.toString();
-        // Si ya usas ListMomentsView con ese encabezado, asertea el exacto; dejamos tolerante:
+        assertTrue(output.contains("Momento añadido correctamente."));
+        assertTrue(output.toLowerCase().contains("un día en el museo de los horrores"));
+    }
+
+    @Test
+    void shouldListAllMomentsWhenOptionTwoIsChosen() {
+        String input = ""
+                + "1\n" + "un viaje inesperado\n" + "un viaje que surgio de la nada\n" + "1\n" + "01/05/2024\n"
+                + "1\n" + "se murio mi canario\n" + "pues si, la ha palmado\n" + "2\n" + "01/06/2024\n"
+                + "2\n" 
+                + "5\n";
+        setInput(input);
+
+        MainController controller = new MainController();
+        controller.start();
+
+        String output = outContent.toString();
         assertTrue(output.contains("Lista de momentos vividos:") || output.contains("Momentos registrados:"));
         assertTrue(output.toLowerCase().contains("un viaje inesperado"));
         assertTrue(output.toLowerCase().contains("se murio mi canario"));
@@ -113,12 +109,11 @@ public class MainControllerTest {
 
     @Test
     void shouldDeleteMomentWhenOptionThreeIsChosen() {
-        // Añadimos dos momentos (ids 1 y 2) y borramos el 1. Luego listamos.
         String input = ""
                 + "1\n" + "título a borrar\n" + "desc\n" + "1\n" + "01/05/2024\n"
                 + "1\n" + "título que queda\n" + "desc\n" + "2\n" + "01/06/2024\n"
-                + "3\n" + "1\n" // eliminar id=1
-                + "2\n"         // listar
+                + "3\n" + "1\n" 
+                + "2\n"        
                 + "5\n";
         setInput(input);
 
@@ -146,14 +141,13 @@ public class MainControllerTest {
 
     @Test
     void shouldMapEmotionCodeTenToNostalgiaWhenListing() {
-        // Añadimos con emoción 10 via AddMomentView (selección de 1..n válida)
         String input = ""
                 + "1\n"
                 + "título nostalgia\n"
                 + "desc\n"
-                + "10\n"            // NOSTALGIA
+                + "10\n"           
                 + "01/07/2024\n"
-                + "2\n"             // listar
+                + "2\n"           
                 + "5\n";
         setInput(input);
 
@@ -167,15 +161,14 @@ public class MainControllerTest {
 
     @Test
     void shouldRetryOnInvalidEmotionAndThenSucceed() {
-        // Primero emoción inválida (11), UI reintenta, luego 1 (válida)
         String input = ""
                 + "1\n"
                 + "titulo\n"
                 + "desc\n"
-                + "11\n"  // inválida -> reintento
-                + "1\n"   // válida
+                + "11\n"  
+                + "1\n"   
                 + "01/07/2024\n"
-                + "2\n"   // listar
+                + "2\n"   
                 + "5\n";
         setInput(input);
 
@@ -183,7 +176,6 @@ public class MainControllerTest {
         controller.start();
 
         String output = outContent.toString();
-        // Mensajes de AddMomentView ante opción inválida
         assertTrue(output.toLowerCase().contains("número no válido")
                 || output.toLowerCase().contains("numero no valido")
                 || output.toLowerCase().contains("entrada inválida")

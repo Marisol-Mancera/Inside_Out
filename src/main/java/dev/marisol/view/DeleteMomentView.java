@@ -10,6 +10,6 @@ public class DeleteMomentView {
     }
 
     public int delete() {
-        return 0; // dummy, en tests se mokea
+        return 0; 
     }
 }

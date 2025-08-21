@@ -52,7 +52,7 @@ public class MomentController {
             Moment toSave = new Moment(nextId, title, description, emotion, date);
 
             momentService.addMoment(toSave);
-            return "Momento añadido correctamente";
+            return "Momento añadido correctamente.";
         } catch (Exception e) {
             return "Error al añadir el momento: " + e.getMessage();
         }

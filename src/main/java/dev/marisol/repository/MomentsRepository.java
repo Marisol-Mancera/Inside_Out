@@ -4,21 +4,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.marisol.model.Emotion;
-import dev. marisol.model.Moment;
+import dev.marisol.model.*;
+
 
 public class MomentsRepository {
-    private List<Moment> momentList= new ArrayList<>();
+    private final List<Moment> momentList= new ArrayList<>();
 
     public void addMoment(Moment moment){
         momentList.add(moment);
     }
     public List<Moment> findAll() {
-        return momentList;
+        return new ArrayList<>(momentList);
     }
 
     public boolean deleteMoment(int id){
-        return momentList.removeIf(m -> m.getId()==id);
+        return momentList.removeIf(m -> m.getId() == id);
     }
 
     public List<Moment> filterByEmotion(Emotion emotion){

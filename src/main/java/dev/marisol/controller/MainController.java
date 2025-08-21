@@ -1,6 +1,5 @@
 package dev.marisol.controller;
 
-import dev.marisol.model.Moment;
 import dev.marisol.repository.MomentsRepository;
 import dev.marisol.service.MomentService;
 import dev.marisol.view.AddMomentView;
@@ -12,9 +11,6 @@ import dev.marisol.view.MessageView;
 import dev.marisol.view.FilterByEmotionView;
 import dev.marisol.view.FilterByDateOfView;
 
-import java.util.Collections;
-import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 public class MainController {
@@ -31,8 +27,8 @@ public class MainController {
     private final FilterByEmotionView filterEmotion;
     private final FilterByDateOfView filterDate;
 
-    public MainController() {
-        this.scanner = new Scanner(System.in);
+    public MainController(Scanner scanner) {
+        this.scanner = scanner;
         this.repository = new MomentsRepository();
         this.momentService = new MomentService(repository);
         this.addMomentView = new AddMomentView(scanner);
@@ -42,15 +38,9 @@ public class MainController {
         this.filterView = new FilterMomentListView(scanner);
         this.filterDate = new FilterByDateOfView(scanner);
         this.filterEmotion = new FilterByEmotionView(scanner);
+        this.momentController = new MomentController(addMomentView, momentService, deleteMomentView, filterView,
+                filterEmotion, filterDate);
 
-        this.momentController = new MomentController(
-                addMomentView,
-                momentService,
-                deleteMomentView,
-                filterView,
-                filterEmotion,
-                filterDate
-        );
     }
 
     public void start() {
@@ -91,5 +81,3 @@ public class MainController {
         scanner.close();
     }
 }
-
-
