@@ -27,9 +27,9 @@ public class MomentControllerTest {
     private AddMomentView addMomentView;
     private MomentService momentService;
     private DeleteMomentView deleteView;
-    private FilterMomentListView filterView;
+    private FilterMomentListView filterView;         
     private FilterByEmotionView filterByEmotionView;
-    private FilterByDateOfView filterByDateOfView;
+    private FilterByDateView filterByDateView;     
 
     private MomentController controller;
 
@@ -38,14 +38,15 @@ public class MomentControllerTest {
         addMomentView = mock(AddMomentView.class);
         momentService = mock(MomentService.class);
         deleteView = mock(DeleteMomentView.class);
-        filterView = mock(FilterMomentListView.class);
+        filterView = mock(FilterMomentListView.class);        // corregido
         filterByEmotionView = mock(FilterByEmotionView.class);
-        filterByDateOfView = mock(FilterByDateOfView.class);
+        filterByDateView = mock(FilterByDateView.class);       // corregido
 
         controller = new MomentController(
-                addMomentView, momentService, deleteView, filterView, filterByEmotionView, filterByDateOfView
+                addMomentView, momentService, deleteView, filterView, filterByEmotionView, filterByDateView
         );
     }
+
 
     @Test
     void addMoment_success_callsServiceAndReturnsMessage() {

@@ -19,22 +19,22 @@ public class MomentController {
     private final AddMomentView addMomentView;
     private MomentService momentService;
     private final DeleteMomentView deleteView;
-    private final FilterMomentListView filterView;
+    private final FilterMomentsListView filterView;       // corregido
     private final FilterByEmotionView filterByEmotionView;
-    private final FilterByDateOfView filterByDateOfView;
+    private final FilterByDateView filterByDateView;      // corregido
 
     public MomentController(AddMomentView addMomentView,
                             MomentService momentService,
                             DeleteMomentView deleteMomentView,
-                            FilterMomentListView filterView,
+                            FilterMomentsListView filterView,         // corregido
                             FilterByEmotionView filterEmotionView,
-                            FilterByDateOfView filterDateOfView) {
+                            FilterByDateView filterDateView) {        // corregido
         this.addMomentView = Objects.requireNonNull(addMomentView);
         this.momentService = Objects.requireNonNull(momentService);
         this.deleteView = Objects.requireNonNull(deleteMomentView);
         this.filterView = Objects.requireNonNull(filterView);
         this.filterByEmotionView = Objects.requireNonNull(filterEmotionView);
-        this.filterByDateOfView = Objects.requireNonNull(filterDateOfView);
+        this.filterByDateView = Objects.requireNonNull(filterDateView);  // corregido
     }
 
     // Permite reinyectar el servicio (útil en tests si se necesita)
@@ -42,15 +42,14 @@ public class MomentController {
         this.momentService = Objects.requireNonNull(service);
     }
 
-    /** Opción: añadir momento. Construye un Moment con id simple (size+1) y guarda. */
     public String addMoment() {
         try {
             String title = addMomentView.askTitle();
             String description = addMomentView.askDescription();
-            Emotion emotion = addMomentView.askEmotion();   // ya devuelve el enum
+            Emotion emotion = addMomentView.askEmotion();
             LocalDate date = addMomentView.askDate();
 
-            int nextId = momentService.getAllMoments().size() + 1; // id simple temporal
+            int nextId = momentService.getAllMoments().size() + 1;
             Moment toSave = new Moment(nextId, title, description, emotion, date);
 
             momentService.addMoment(toSave);
@@ -60,20 +59,17 @@ public class MomentController {
         }
     }
 
-    /** Opción: listar todos los momentos. */
     public List<Moment> listMoments() {
         List<Moment> moments = momentService.getAllMoments();
         return (moments != null) ? moments : Collections.emptyList();
     }
 
-    /** Opción: eliminar por id. */
     public String deleteMoment() {
         int id = deleteView.delete();
         momentService.deleteMoment(id);
         return "Momento eliminado correctamente.";
     }
 
-    /** Opción: filtrar (1 por emoción, 2 por fecha). */
     public List<Moment> filterMoments() {
         int option = filterView.filterMoments();
         switch (option) {
@@ -82,7 +78,7 @@ public class MomentController {
                 return momentService.filterByEmotion(selected);
             }
             case 2: {
-                LocalDate selectedDate = filterByDateOfView.filterDate();
+                LocalDate selectedDate = filterByDateView.filterDate();   // corregido
                 return momentService.getMonthMoments(selectedDate.getMonthValue(), selectedDate.getYear());
             }
             default:
