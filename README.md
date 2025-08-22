@@ -25,9 +25,37 @@ El proyecto sigue el patrón MVC:
 - **Java 17**
 - **JUnit 5** para pruebas unitarias.
 
+## 🔨 Instalacion
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/usuario/nombre-del-proyecto.git
+   cd nombre-del-proyecto
+   ```
+
+2. **Requisitos previos**
+   - Tener instalado **Java 17** o superior.
+   - Tener instalado **Maven** (para compilación y gestión de dependencias).
+   - Un IDE recomendado: **IntelliJ IDEA** o **Eclipse**.
+
+3. **Compilar el proyecto**
+   ```bash
+   mvn clean install
+   ```
+
+4. **Ejecutar las pruebas**
+   ```bash
+   mvn test
+   ```
+
+
+---
+
+
 ## ⚠️ Estado del proyecto
 Este proyecto está **en construcción y mejora continua**.  
 Actualmente cumple con la funcionalidad básica, pero se están refinando pruebas, mensajes de usuario y cobertura de test.
+
+## 📰 Diagrama
 
 
 ```mermaid
