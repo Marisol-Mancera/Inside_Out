@@ -29,6 +29,9 @@ El proyecto sigue el patrón MVC:
 Este proyecto está **en construcción y mejora continua**.  
 Actualmente cumple con la funcionalidad básica, pero se están refinando pruebas, mensajes de usuario y cobertura de test.
 
+## 🚦Covertura
+        ![Covertura de proyecto](src/assets/test-cover.png)
+
 ### Próximos pasos / Backlog
 - Mejorar cobertura de pruebas unitarias.
 - Estandarizar los mensajes en la vista para mayor consistencia.
