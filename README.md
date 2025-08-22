@@ -30,9 +30,8 @@ Este proyecto está **en construcción y mejora continua**.
 Actualmente cumple con la funcionalidad básica, pero se están refinando pruebas, mensajes de usuario y cobertura de test.
 
 ## 🚦Covertura
-    <img width="330" height="666" alt="test-cover" src="https://github.com/user-attachments/assets/39f43599-27e5-454b-85d6-556ca049e2e7" />
 
-
+    ![Cobertura de proyecto](https://raw.githubusercontent.com/Marisol-Mancera/Inside_Out/dev/src/assets/test-cover.png)
 
 
 ### Próximos pasos / Backlog
