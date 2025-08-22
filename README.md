@@ -31,7 +31,7 @@ Actualmente cumple con la funcionalidad básica, pero se están refinando prueba
 
 ## 🚦Covertura
 
-    ![Cobertura de proyecto](https://raw.githubusercontent.com/Marisol-Mancera/Inside_Out/dev/src/assets/test-cover.png)
+    ![Cobertura de proyecto](https://github.com/Marisol-Mancera/Inside_Out/issues/1#issue-3345215920)
 
 
 ### Próximos pasos / Backlog
