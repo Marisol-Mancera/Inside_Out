@@ -29,6 +29,135 @@ El proyecto sigue el patrón MVC:
 Este proyecto está **en construcción y mejora continua**.  
 Actualmente cumple con la funcionalidad básica, pero se están refinando pruebas, mensajes de usuario y cobertura de test.
 
+
+```mermaid
+classDiagram
+    class Moment {
+        -int id
+        -String title
+        -String description
+        -Emotion emotion
+        -LocalDate momentDate
+        -LocalDate creationDate
+        -LocalDate modificationDate
+        -boolean isPositive
+        +Moment(int id, String title, String description, Emotion emotion, LocalDate momentDate, boolean isPositive)
+        +getId() int
+        +getTitle() String
+        +getDescription() String
+        +getEmotion() Emotion
+        +getMomentDate() LocalDate
+        +getCreationDate() LocalDate
+        +getModificationDate() LocalDate
+        +setModificationDate(LocalDate date) void
+        +isPositive() boolean
+    }
+
+    class Emotion {
+        <<enumeration>>
+        +HAPPY
+        +SAD
+        +ANGRY
+        +NOSTALGIA
+        +etc...
+    }
+
+    class AddMomentDTO {
+        -String title
+        -String description
+        -Emotion emotion
+        -LocalDate momentDate
+        -boolean isPositive
+        +AddMomentDTO(String, String, Emotion, LocalDate, boolean)
+        +getTitle() String
+        +getDescription() String
+        +getEmotion() Emotion
+        +getMomentDate() LocalDate
+        +isPositive() boolean
+    }
+
+    class MomentsRepository {
+        +save(Moment) void
+        +findAll() List~Moment~
+        +deleteById(int) boolean
+        +filterByEmotion(Emotion) List~Moment~
+        +filterByDate(LocalDate) List~Moment~
+        +filterByCategory(boolean) List~Moment~
+    }
+
+    class MomentService {
+        -MomentsRepository repository
+        +MomentService(MomentsRepository)
+        +addMoment(AddMomentDTO) Moment
+        +listMoments() List~Moment~
+        +deleteMoment(int) boolean
+        +filterByEmotion(Emotion) List~Moment~
+        +filterByDate(LocalDate) List~Moment~
+        +filterByCategory(boolean) List~Moment~
+    }
+
+    class MomentController {
+        -AddMomentView addMomentView
+        -MomentService momentService
+        -DeleteMomentView deleteMomentView
+        -FilterMomentListView filterView
+        -FilterByEmotionView filterEmotion
+        -FilterByDateOfView filterDate
+        -FilterByCategoryView filterCategory
+        +addMoment() String
+        +listMoments() List~Moment~
+        +deleteMoment() String
+        +filterMoments() List~Moment~
+    }
+
+    class MainController {
+        -MomentsRepository repository
+        -MomentService momentService
+        -AddMomentView addMomentView
+        -MomentController momentController
+        -MessageView messageView
+        -MainMenuView mainMenuView
+        -DeleteMomentView deleteMomentView
+        -FilterMomentListView filterView
+        -FilterByEmotionView filterEmotion
+        -FilterByDateOfView filterDate
+        -FilterByCategoryView filterCategory
+        +start() void
+    }
+
+    %% Views
+    class AddMomentView
+    class DeleteMomentView
+    class FilterMomentListView
+    class FilterByEmotionView
+    class FilterByDateOfView
+    class FilterByCategoryView
+    class ListMomentsView
+    class MainMenuView
+    class MessageView
+
+    %% Relationships
+    MomentService --> MomentsRepository
+    MomentController --> MomentService
+    MomentController --> AddMomentView
+    MomentController --> DeleteMomentView
+    MomentController --> FilterMomentListView
+    MomentController --> FilterByEmotionView
+    MomentController --> FilterByDateOfView
+    MomentController --> FilterByCategoryView
+    MainController --> MomentController
+    MainController --> MomentService
+    MainController --> MomentsRepository
+    MainController --> MainMenuView
+    MainController --> MessageView
+    MainController --> AddMomentView
+    MainController --> DeleteMomentView
+    MainController --> FilterMomentListView
+    MainController --> FilterByEmotionView
+    MainController --> FilterByDateOfView
+    MainController --> FilterByCategoryView
+```
+
 ## 🚦Covertura
 
     ![Cobertura de proyecto](https://raw.githubusercontent.com/Marisol-Mancera/Inside_Out/dev/src/assets/test-cover.png))
