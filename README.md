@@ -30,7 +30,7 @@ Este proyecto está **en construcción y mejora continua**.
 Actualmente cumple con la funcionalidad básica, pero se están refinando pruebas, mensajes de usuario y cobertura de test.
 
 ## 🚦Covertura
-        ![Cobertura de proyecto](src/assets/test-cover.png)
+        <img width="330" height="666" alt="Image" src="https://github.com/user-attachments/assets/7a80b19f-97ff-4c21-9951-339f798885da" />
 
 
 ### Próximos pasos / Backlog
