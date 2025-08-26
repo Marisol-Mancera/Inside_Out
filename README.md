@@ -187,6 +187,7 @@ classDiagram
 ```
 
 ## 🚦Covertura
+<img width="330" height="666" alt="test-cover" src="https://github.com/user-attachments/assets/81be2d4d-bd8b-4082-95f0-5b1e89568609" />
 
     ![Cobertura de proyecto](https://raw.githubusercontent.com/Marisol-Mancera/Inside_Out/dev/src/assets/test-cover.png))
 
